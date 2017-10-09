@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- EasyUI开发环境搭建 -->
+<!-- I.JavaScript库文件 -->
+<!-- i.jQuery库文件 -->
+<script type="text/javascript" src="/jQueryEasyUIDemo/jQuery/jquery.min.js"></script>
+
+<!-- ii.EasyUI库文件 -->
+<script type="text/javascript" src="/jQueryEasyUIDemo/jQuery/jquery.easyui.min.js"></script>
+
+<!-- iii.本地化文件 -->
+<script type="text/javascript" src="/jQueryEasyUIDemo/jQuery/easyui-lang-zh_CN.js"></script>
+
+<!-- II.CSS样式文件 -->
+<!-- i.主题样式文件 -->
+<link rel="stylesheet" type="text/css" href="/jQueryEasyUIDemo/style/themes/default/easyui.css"/>
+
+<!-- ii.图标样式文件 -->
+<link rel="stylesheet" type="text/css" href="/jQueryEasyUIDemo/style/themes/icon.css"/>
+</head>
+<body>
+
+	<table class="easyui-datagrid" style="width:100%"   
+	        data-options="url:'/jQueryEasyUIDemo/getEmpList',fitColumns:true,singleSelect:true">   
+	    <thead>   
+	        <tr>
+	            <th data-options="field:'empId',width:100">ID</th>   
+	            <th data-options="field:'empName',width:100">姓名</th>   
+	            <th data-options="field:'salary',width:100">工资</th>   
+	        </tr>   
+	    </thead>   
+	</table> 
+
+</body>
+</html>

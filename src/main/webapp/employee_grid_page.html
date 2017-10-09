@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- EasyUI开发环境搭建 -->
+<!-- I.JavaScript库文件 -->
+<!-- i.jQuery库文件 -->
+<script type="text/javascript" src="/jQueryEasyUIDemo/jQuery/jquery.min.js"></script>
+
+<!-- ii.EasyUI库文件 -->
+<script type="text/javascript" src="/jQueryEasyUIDemo/jQuery/jquery.easyui.min.js"></script>
+
+<!-- iii.本地化文件 -->
+<script type="text/javascript" src="/jQueryEasyUIDemo/jQuery/easyui-lang-zh_CN.js"></script>
+
+<!-- II.CSS样式文件 -->
+<!-- i.主题样式文件 -->
+<link rel="stylesheet" type="text/css" href="/jQueryEasyUIDemo/style/themes/default/easyui.css"/>
+
+<!-- ii.图标样式文件 -->
+<link rel="stylesheet" type="text/css" href="/jQueryEasyUIDemo/style/themes/icon.css"/>
+
+<script type="text/javascript">
+	
+	$(function(){
+		
+		//1.页面初始化
+		$("#empGrid").datagrid({url:'/jQueryEasyUIDemo/getEmpPage',
+									fitColumns:true,
+									singleSelect:true,
+									pagination:true,
+									toolbar:'#empToolBar'});
+		$("#empForm").form();
+		$("#empAddBtn").linkbutton({
+			iconCls:'icon-add',
+			onClick:function(){
+				
+				$("#empFormWindow").window({
+					closed:false,
+					modal:true
+				});
+				
+				$("#empForm").form({url:"/jQueryEasyUIDemo/saveEmp"});
+				
+			}
+		});
+		$("#empEditBtn").linkbutton({
+			iconCls:'icon-edit',
+			onClick:function() {
+				
+				//要先选中一条记录才能够回显表单
+				var selectedRow = $("#empGrid").datagrid("getSelected");
+				if(selectedRow == null) {
+					$.messager.alert("员工管理系统","请先选择一条记录！","warning");
+					return ;
+				}
+				
+				//显示包含表单的window控件
+				$("#empFormWindow").window({
+					closed:false,
+					title:'编辑员工信息',
+					modal:true
+				});
+				
+				//回显表单要先获取到表单控件对象
+				$("#empForm").form("load", selectedRow);
+				
+				//设置表单提交的目标地址
+				$("#empForm").form({url:"/jQueryEasyUIDemo/updateEmp"});
+			}
+		});
+		$("#empRemoveBtn").linkbutton({
+			iconCls:'icon-remove',
+			onClick:function(){
+				var selectedRow = $("#empGrid").datagrid("getSelected");
+				if(selectedRow == null) {
+					$.messager.alert("员工管理系统","请先选择一条记录！","warning");
+					return ;
+				}
+				var empId = selectedRow.empId;
+				
+				var url = "/jQueryEasyUIDemo/removeEmp/"+empId;
+				var param = {time:new Date()};
+				var callBack = function(respData){
+					$.messager.alert("员工管理系统",respData,"info");
+					
+					//让grid重新加载一下
+					$("#empGrid").datagrid("reload");
+					
+				}
+				var type = "text";
+				
+				$.post(url, param, callBack, type);
+				
+			}
+		});
+		$("#submitBtn").linkbutton({
+			iconCls:'icon-save'
+		});
+		$("#empFormWindow").window({
+			title:'创建员工信息',
+			closed:true
+		});
+		
+		$("#submitBtn").linkbutton({
+			onClick:function(){
+				
+				$("#empForm").form("submit",{
+					
+					success:function(respData){
+						$.messager.alert("员工管理系统",respData,"info");
+						
+						//关闭包含表单的window控件
+						$("#empFormWindow").window({closed:true});
+						
+						//让grid重新加载一下
+						$("#empGrid").datagrid("reload");
+						
+						//将使用过的表单清理一下
+						$("#empForm").form("clear");
+					}
+					
+				});
+				
+			}
+		});
+		
+	});
+	
+</script>
+
+</head>
+<body>
+
+	<table id="empGrid" style="width:100%"> 
+	    <thead>   
+	        <tr>
+	            <th data-options="field:'empId',width:100">ID</th>   
+	            <th data-options="field:'empName',width:100">姓名</th>   
+	            <th data-options="field:'salary',width:100">工资</th>   
+	        </tr>   
+	    </thead>   
+	</table>
+	
+	<div id="empToolBar">
+		<a id="empAddBtn">保存员工</a>
+		<a id="empRemoveBtn">删除员工</a>
+		<a id="empEditBtn">编辑员工</a>
+	</div>
+	
+	<div id="empFormWindow" style="width: 400px">
+		<form id="empForm" method="post">
+			
+			<table style="margin: 0px auto 0px auto">
+				<tr>
+					<td>ID</td>
+					<td><input type="text" name="empId"/></td>
+				</tr>
+				<tr>
+					<td>姓名</td>
+					<td><input type="text" name="empName"/></td>
+				</tr>
+				<tr>
+					<td>工资</td>
+					<td><input type="text" name="salary"/></td>
+				</tr>
+				<tr>
+					<td align="center" colspan="2">
+						<a id="submitBtn">保存</a>
+					</td>
+				</tr>
+			</table>
+			
+		</form>
+	</div>
+
+</body>
+</html>
